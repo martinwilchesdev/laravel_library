@@ -15,10 +15,10 @@
       leave-active-class="transition ease-in-out duration-150"
       leave-from-class="opacity-100"
       leave-to-class="opacity-0 transform -translate-x-20">
-    <aside v-show="$page.props.showingMobileMenu" class="fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white md:hidden">
-      <div class="py-4 text-gray-500">
-        <Link class="ml-6 text-lg font-bold text-gray-800" :href="route('dashboard')">
-        Windmill
+    <aside v-show="$page.props.showingMobileMenu" class="fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-purple-800 md:hidden">
+      <div class="py-4 text-white">
+        <Link class="ml-6 text-lg font-bold text-gray-100" :href="route('dashboard')">
+        Library
       </Link>
         <ul class="mt-6">
           <li class="relative px-6 py-3">
@@ -50,26 +50,23 @@
           <li class="relative px-6 py-3">
             <ResponsiveNavLink :href="route('about')" :active="route().current('about')">
               <template #icon>
-                <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
-                     stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                      d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                 </svg>
               </template>
-              About us
+              Authors
             </ResponsiveNavLink>
           </li>
 
         <li class="relative px-6 py-3">
           <button @click="showingTwoLevelMenu = !showingTwoLevelMenu"
-              class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800"
+              class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-300"
               aria-haspopup="true">
                 <span class="inline-flex items-center">
-                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                         stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                        <path d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                    </svg>
-                    <span class="ml-4">Two-level menu</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                  </svg>
+                    <span class="ml-4">Books</span>
                 </span>
             <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd"
@@ -80,7 +77,10 @@
             <ul v-show="showingTwoLevelMenu" class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50"
                 aria-label="submenu">
               <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800">
-                <a class="w-full" href="#">Child menu</a>
+                <a class="w-full" href="#">List</a>
+              </li>
+              <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800">
+                <a class="w-full" href="#">Create</a>
               </li>
             </ul>
         </li>

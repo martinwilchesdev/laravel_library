@@ -1,5 +1,5 @@
 <template>
-    <header class="z-10 py-4 bg-white shadow-md">
+    <header class="z-10 py-4 bg-white shadow-md border-2 border-b-purple-800">
       <div class="container flex justify-between items-center px-6 mx-auto h-full text-purple-600 md:justify-end">
         <!-- Mobile hamburger -->
         <button @click="$page.props.showingMobileMenu = !$page.props.showingMobileMenu" class="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple" aria-label="Menu">
