@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -18,12 +20,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect('/dashboard');
 });
 
 Route::get('/dashboard', function () {
@@ -38,6 +35,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Los recursos de ruta permiten definir un conjunto completo de rutas RESTful
+    Route::resource('authors', AuthorController::class);
+    Route::resource('books', BookController::class);
+
+    /**
+     * En inertia, la subida de archivos usando una solicitud multipart/form-data no es soportado de forma nativa
+     * cuando se usan los metodos HTTP PUT, PATCH o DELETE.
+    */
+    Route::post('updatebook', [BookController::class, 'updatebook'])->name('updatebook');
 });
 
 require __DIR__.'/auth.php';

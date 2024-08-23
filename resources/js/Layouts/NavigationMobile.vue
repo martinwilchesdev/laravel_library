@@ -48,7 +48,7 @@
           </li>
 
           <li class="relative px-6 py-3">
-            <ResponsiveNavLink :href="route('about')" :active="route().current('about')">
+            <ResponsiveNavLink :href="route('authors.index')" :active="route().current('authors.index')">
               <template #icon>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
@@ -74,13 +74,17 @@
                     clip-rule="evenodd"></path>
             </svg>
           </button>
-            <ul v-show="showingTwoLevelMenu" class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50"
+            <ul v-show="showingTwoLevelMenu || route().current('books.index') || route().current('books.create')" class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50"
                 aria-label="submenu">
               <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800">
-                <a class="w-full" href="#">List</a>
+                <NavLink :href="route('books.index')" :active="route().current('books.index')">
+                  List
+                </NavLink>
               </li>
               <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800">
-                <a class="w-full" href="#">Create</a>
+                <NavLink :href="route('books.create')" :active="route().current('books.create')">
+                  Create
+                </NavLink>
               </li>
             </ul>
         </li>

@@ -20,7 +20,7 @@ class Author extends Model
         return $this->belongsToMany(Book::class);
     }
 
-    public function coutries(): BelongsTo {
+    public function countries(): BelongsTo {
         return $this->belongsTo(Country::class);
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Author;
+use App\Models\Country;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 class AuthorController extends Controller
@@ -13,6 +15,16 @@ class AuthorController extends Controller
     public function index()
     {
         //
+        $countries = Country::all();
+        $authors = Author::all();
+        // $authors = Author::with('countries:country_id,countries')->get();
+
+        \Log::debug($authors);
+
+        return Inertia::render('Authors/Index', [
+            'countries' => $countries,
+            'authors' => $authors
+        ]);
     }
 
     /**
