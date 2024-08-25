@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from 'vue'
 
+import PrimaryButton from '@/Components/PrimaryButton.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import DangerButton from '@/Components/DangerButton.vue'
 import InputError from '@/Components/InputError.vue'
 import InputGroup from '@/Components/InputGroup.vue'
+import SelectInput from '@/Components/SelectInput.vue'
 import Modal from '@/Components/Modal.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import WarningButton from '@/Components/WarningButton.vue'
@@ -22,31 +24,57 @@ const props = defineProps({
     },
 })
 
+const v = ref({ id: '', name: '', last_name: '', country: '', books: [] })
 const form = useForm({ name: '', last_name: '', country_id: '' })
-const v = ref({ id: '', name: '', last_name: '', books: [] })
+
+const showModalDelete = ref(false)
 const showModalView = ref(false)
 const showModalForm = ref(false)
-const showModalDelete = ref(false)
-const title = ref('')
-const operation = ref(1)
-const msj = ref('')
+
 const classMsj = ref('hidden')
+const operation = ref(1)
+const title = ref('')
+const msj = ref('')
 
 const openModalView = (a) => {
+    v.value.name = a.name
+    v.value.last_name = a.last_name
+    v.value.country = a.countries.country
+    v.value.books = a.books
+
     showModalView.value = true
 }
-const openModalForm = (a) => {}
-const openModalDelete = (a) => {}
+const openModalForm = (op, a = {}) => {
+    showModalForm.value = true
+    operation.value = op
+
+    if (operation.value == 1) {
+        title.value = 'Create author'
+    } else {
+        title.value = 'Edit author'
+        form.name = a.name
+        form.last_name = a.last_name
+        form.country_id = a.country_id
+
+        v.value.id = a.id
+    }
+}
+const openModalDelete = (a) => {
+    showModalDelete.value = true
+}
 
 const closeModalView = (a) => {
     showModalView.value = false
 }
 const closeModalForm = (a) => {
-    showModalForm(false)
+    showModalForm.value = false
+    form.reset()
 }
 const closeModalDelete = (a) => {
-    showModalDelete(false)
+    showModalDelete.value = false
 }
+
+const save = () => {}
 </script>
 
 <template>
@@ -55,7 +83,7 @@ const closeModalDelete = (a) => {
     <AuthenticatedLayout>
         <template #header>
             Authors
-            <DarkButton>
+            <DarkButton @click="openModalForm(1)">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -127,7 +155,9 @@ const closeModalDelete = (a) => {
                                 </SecondaryButton>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <WarningButton>
+                                <WarningButton
+                                    @click="openModalForm(2, author)"
+                                >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
@@ -145,7 +175,7 @@ const closeModalDelete = (a) => {
                                 </WarningButton>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <DangerButton>
+                                <DangerButton @click="openModalDelete(author)">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
@@ -168,22 +198,126 @@ const closeModalDelete = (a) => {
             </div>
         </div>
         <Modal :show="showModalView" @close="closeModalView">
-            <div class="px-6 pt-3">
+            <div class="p-6">
+                <p>
+                    Author:
+                    <span class="text-lg font-medium text-gray">{{
+                        v.name + ' ' + v.last_name
+                    }}</span>
+                </p>
+                <p>
+                    Country:
+                    <span class="text-lg font-medium text-gray-900">{{
+                        v.country
+                    }}</span>
+                </p>
+                <span v-if="v.books.length > 0">Books:</span>
+                <ol v-for="(book, index) in v.books" :key="index">
+                    <li class="text-lg font-medium text-gray-900">
+                        {{ index + 1 + ') ' + book.title }}
+                    </li>
+                </ol>
             </div>
-            <div class="mt-6 flex justify-end">
-                <SecondaryButton @click="closeModalView">Cancel</SecondaryButton>
+            <div class="m-6 flex justify-end">
+                <SecondaryButton @click="closeModalView"
+                    >Cancel</SecondaryButton
+                >
             </div>
         </Modal>
         <Modal :show="showModalForm" @close="closeModalForm">
-            <div class="p-6"></div>
-            <div class="mt-6 flex justify-end">
-                <SecondaryButton @click="closeModalForm">Cancel</SecondaryButton>
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">{{ title }}</h2>
+                <div class="my-6 space-y-6 max-w">
+                    <InputGroup
+                        text="Name"
+                        :type="text"
+                        :required="true"
+                        :modelValue="form.name"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                            />
+                        </svg>
+                    </InputGroup>
+                    <InputError
+                        class="mt-1"
+                        :message="form.errors.name"
+                    ></InputError>
+                    <InputGroup
+                        text="Last name"
+                        :type="text"
+                        :required="true"
+                        :modelValue="form.last_name"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                            />
+                        </svg>
+                    </InputGroup>
+                    <InputError
+                        class="mt-1"
+                        :message="form.errors.last_name"
+                    ></InputError>
+                    <SelectInput
+                        text="Country"
+                        :required="true"
+                        :modelValue="form.country_id"
+                        :options="countries"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"
+                            />
+                        </svg>
+                    </SelectInput>
+                    <InputError
+                        class="mt-1"
+                        :message="form.errors.country_id"
+                    ></InputError>
+                </div>
+                <PrimaryButton @click="save">Save</PrimaryButton>
+            </div>
+            <div class="m-6 flex justify-end">
+                <SecondaryButton @click="closeModalForm"
+                    >Cancel</SecondaryButton
+                >
             </div>
         </Modal>
         <Modal :show="showModalDelete" @close="closeModalDelete">
             <div class="p-6"></div>
-            <div class="mt-6 flex justify-end">
-                <SecondaryButton @click="closeModalDelete">Cancel</SecondaryButton>
+            <div class="m-6 flex justify-end">
+                <SecondaryButton @click="closeModalDelete"
+                    >Cancel</SecondaryButton
+                >
             </div>
         </Modal>
     </AuthenticatedLayout>
