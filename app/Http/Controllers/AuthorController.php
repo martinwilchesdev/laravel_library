@@ -16,10 +16,7 @@ class AuthorController extends Controller
     {
         //
         $countries = Country::all();
-        $authors = Author::all();
-        // $authors = Author::with('countries:country_id,countries')->get();
-
-        \Log::debug($authors);
+        $authors = Author::with(['countries:id,country', 'books:title'])->get();
 
         return Inertia::render('Authors/Index', [
             'countries' => $countries,

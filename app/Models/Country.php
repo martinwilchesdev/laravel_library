@@ -12,6 +12,6 @@ class Country extends Model
     protected $fillable = ['country'];
 
     public function authors(): HasMany {
-        return $this->hasMany(Author::class);
+        return $this->hasMany(Author::class, 'country_id');
     }
 }
