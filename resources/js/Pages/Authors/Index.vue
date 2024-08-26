@@ -63,18 +63,49 @@ const openModalDelete = (a) => {
     showModalDelete.value = true
 }
 
-const closeModalView = (a) => {
+const closeModalView = () => {
     showModalView.value = false
 }
-const closeModalForm = (a) => {
+const closeModalForm = () => {
     showModalForm.value = false
     form.reset()
+    form.clearErrors()
 }
-const closeModalDelete = (a) => {
+const closeModalDelete = () => {
     showModalDelete.value = false
 }
 
-const save = () => {}
+const save = () => {
+    if (operation.value == 1) {
+        form.post(route('authors.store'), {
+            onSuccess: () => {
+                ok('Author created')
+            },
+        })
+    } else {
+        form.put(route('authors.update', v.value.id), {
+            onSuccess: () => {
+                ok('Author updated')
+            },
+        })
+    }
+}
+
+const ok = (message) => {
+    if (operation.value == 2) {
+        closeModalForm()
+    }
+    closeModalDelete()
+    classMsj.value = 'block'
+    msj.value = message
+
+    setTimeout(() => {
+        classMsj.value = 'hidden'
+        msj.value = ''
+    }, 5000)
+
+    form.reset()
+}
 </script>
 
 <template>
@@ -100,6 +131,35 @@ const save = () => {}
                 </svg>
             </DarkButton>
         </template>
+
+        <div
+            :class="classMsj"
+            class="inline-flex overflow-hidden mb-4 w-full bg-white rounded-lg shadow-md"
+        >
+            <div class="flex justify-center items-center w-12 bg-green-500">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                </svg>
+            </div>
+
+            <div class="px-4 py-2 -mx-3">
+                <div class="mx-3">
+                    <span class="font-semibold text-green-500">Success</span>
+                    <p class="text-sm text-gray-600">{{ msj }}</p>
+                </div>
+            </div>
+        </div>
 
         <div class="w-full overflow-hidden rounded-lg border shadow-md">
             <div class="w-full overflow-x-auto bg-white">
@@ -232,7 +292,7 @@ const save = () => {}
                         text="Name"
                         :type="text"
                         :required="true"
-                        :modelValue="form.name"
+                        v-model="form.name"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -257,7 +317,7 @@ const save = () => {}
                         text="Last name"
                         :type="text"
                         :required="true"
-                        :modelValue="form.last_name"
+                        v-model="form.last_name"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -281,8 +341,8 @@ const save = () => {}
                     <SelectInput
                         text="Country"
                         :required="true"
-                        :modelValue="form.country_id"
                         :options="countries"
+                        v-model="form.country_id"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

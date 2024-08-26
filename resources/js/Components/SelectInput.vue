@@ -6,6 +6,7 @@
             >
                 <select
                     class="block w-full pl-10 mt-1 text-sm text-black dark:text-gray-500 dark:border-gray-600 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input"
+                    @input="$emit('update:modelValue', $event.target.value)"
                     :placeholder="text"
                     :required="required"
                     :value="modelValue"
@@ -30,17 +31,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-
 defineProps(['modelValue', 'text', 'required', 'options'])
 
 defineEmits(['update:modelValue'])
-
-const input = ref(null)
-
-// onMounted(() => {
-//     if (input.value.hasAttribute('autofocus')) {
-//         input.value.focus()
-//     }
-// })
 </script>
