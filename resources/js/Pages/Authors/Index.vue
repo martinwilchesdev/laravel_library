@@ -61,10 +61,19 @@ const openModalForm = (op, a = {}) => {
 }
 const openModalDelete = (a) => {
     showModalDelete.value = true
+
+    v.value.id = a.id
+    v.value.name = a.name
+    v.value.last_name = a.last_name
 }
 
 const closeModalView = () => {
     showModalView.value = false
+
+    v.value.name = ''
+    v.value.last_name = ''
+    v.value.country = ''
+    v.value.books = ''
 }
 const closeModalForm = () => {
     showModalForm.value = false
@@ -73,6 +82,10 @@ const closeModalForm = () => {
 }
 const closeModalDelete = () => {
     showModalDelete.value = false
+
+    v.value.id = ''
+    v.value.name = ''
+    v.value.last_name = ''
 }
 
 const save = () => {
@@ -89,6 +102,14 @@ const save = () => {
             },
         })
     }
+}
+
+const deleteAuthor = (author) => {
+    form.delete(route('authors.destroy', v.value.id), {
+        onSuccess: () => {
+            ok('Author deleted')
+        },
+    })
 }
 
 const ok = (message) => {
@@ -261,19 +282,19 @@ const ok = (message) => {
             <div class="p-6">
                 <p>
                     Author:
-                    <span class="text-lg font-medium text-gray">{{
+                    <span class="text-lg font-bold text-gray-700">{{
                         v.name + ' ' + v.last_name
                     }}</span>
                 </p>
                 <p>
                     Country:
-                    <span class="text-lg font-medium text-gray-900">{{
+                    <span class="text-lg font-bold text-gray-700">{{
                         v.country
                     }}</span>
                 </p>
                 <span v-if="v.books.length > 0">Books:</span>
                 <ol v-for="(book, index) in v.books" :key="index">
-                    <li class="text-lg font-medium text-gray-900">
+                    <li class="text-lg font-bold text-gray-700">
                         {{ index + 1 + ') ' + book.title }}
                     </li>
                 </ol>
@@ -286,7 +307,7 @@ const ok = (message) => {
         </Modal>
         <Modal :show="showModalForm" @close="closeModalForm">
             <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900">{{ title }}</h2>
+                <h2 class="text-lg font-bold text-gray-700">{{ title }}</h2>
                 <div class="my-6 space-y-6 max-w">
                     <InputGroup
                         text="Name"
@@ -373,7 +394,15 @@ const ok = (message) => {
             </div>
         </Modal>
         <Modal :show="showModalDelete" @close="closeModalDelete">
-            <div class="p-6"></div>
+            <div class="p-6">
+                <p class="text-2xl text-gray-500 mb-3">
+                    Are you sure delete to
+                    <span class="text-lg font-bold text-gray-700"
+                        >{{ v.name + ' ' + v.last_name }}?</span
+                    >
+                </p>
+                <PrimaryButton @click="deleteAuthor">Delete</PrimaryButton>
+            </div>
             <div class="m-6 flex justify-end">
                 <SecondaryButton @click="closeModalDelete"
                     >Cancel</SecondaryButton
