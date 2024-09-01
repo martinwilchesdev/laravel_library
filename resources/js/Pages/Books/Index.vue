@@ -25,21 +25,41 @@ const props = defineProps({
     },
 })
 
-console.log(props.flash)
-
-const form = { id: '', title: '' }
-const showModalDel = ref(false)
+const form = useForm({ id: '', title: '' })
+const showModalDelete = ref(false)
 const msj = ref(props.flash !== null ? props.flash.success : '')
 const classMsj = ref(props.flash.success !== null ? '' : 'hidden')
 
 const openModalDelete = (b) => {
     form.id = b.id
     form.title = b.title
-    showModalDel.value = true
+    showModalDelete.value = true
 }
 
-const closeModalDelete = (b) => {
-    showModalDel.value = false
+const closeModalDelete = () => {
+    showModalDelete.value = false
+}
+
+const deleteBook = () => {
+    form.delete(route('books.destroy', form.id), {
+        onSuccess: () => {
+            ok(props.flash.success)
+        }
+    })
+}
+
+const ok = (message) => {
+    closeModalDelete()
+    console.log(classMsj.value)
+    classMsj.value = 'block'
+    msj.value = message
+
+    setTimeout(() => {
+        classMsj.value = 'hidden'
+        msj.value = ''
+    }, 5000)
+
+    form.reset()
 }
 </script>
 
@@ -152,7 +172,7 @@ const closeModalDelete = (b) => {
                                 </WarningButton>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <DangerButton @click="openModalDelete(author)">
+                                <DangerButton @click="openModalDelete(book)">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
@@ -184,10 +204,10 @@ const closeModalDelete = (b) => {
                 <p class="text-2xl text-gray-500 mb-3">
                     Are you sure delete to
                     <span class="text-lg font-bold text-gray-700"
-                        >{{ v.name + ' ' + v.last_name }}?</span
+                        >{{ form.title }}?</span
                     >
                 </p>
-                <PrimaryButton @click="deleteAuthor">Delete</PrimaryButton>
+                <PrimaryButton @click="deleteBook">Delete</PrimaryButton>
             </div>
             <div class="m-6 flex justify-end">
                 <SecondaryButton @click="closeModalDelete"

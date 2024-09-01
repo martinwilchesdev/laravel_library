@@ -66,5 +66,8 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         //
+        $book->delete();
+
+        return redirect('books')->with('success', 'Book deleted'); // Enviar un mensaje flash a la vista
     }
 }
