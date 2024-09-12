@@ -42,10 +42,9 @@ class BookController extends Controller
     public function show(Book $book)
     {
         //
-        \Log::debug($book);
         return Inertia::render('Books/Show', [
             'book' => $book,
-            'authors' => $book->authors()
+            'authors' => $book->authors
         ]);
     }
 

@@ -45,16 +45,16 @@ const deleteBook = () => {
     form.delete(route('books.destroy', form.id), {
         onSuccess: () => {
             ok(props.flash.success)
-        }
+        },
     })
 }
 
 const bookDetails = async (book) => {
     try {
         await axios.get('http://localhost:8000/books/show', {
-            book
+            book,
         })
-    } catch(e) {
+    } catch (e) {
         console.log(e)
     }
 }
@@ -78,9 +78,7 @@ const ok = (message) => {
     <Head title="Books"></Head>
 
     <AuthenticatedLayout>
-        <template #header>
-            Books
-        </template>
+        <template #header> Books </template>
 
         <div
             :class="classMsj"
@@ -139,7 +137,11 @@ const ok = (message) => {
                                 {{ book.title }}
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <img :src="'storage' + book.image" alt="Book cover" width="80px" />
+                                <img
+                                    :src="'storage' + book.image"
+                                    alt="Book cover"
+                                    width="80px"
+                                />
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 <NavLink :href="route('books.show', book.id)">
