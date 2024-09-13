@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
 use App\Models\Book;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -26,6 +27,9 @@ class BookController extends Controller
     public function create()
     {
         //
+        return Inertia::render('Books/Create', [
+            'authors' => Author::all()
+        ]);
     }
 
     /**
@@ -54,6 +58,11 @@ class BookController extends Controller
     public function edit(Book $book)
     {
         //
+        return Inertia::render('Books/Edit', [
+            'authors' => Author::all(),
+            'book' => $book,
+            'authorsOfBook' => $book->authors
+        ]);
     }
 
     /**
