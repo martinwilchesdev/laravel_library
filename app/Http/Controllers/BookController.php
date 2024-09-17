@@ -38,6 +38,11 @@ class BookController extends Controller
     public function store(Request $request)
     {
         //
+        \Log::debug($request);
+        $author = new Book($request->input());
+        $author->save();
+
+        return redirect('books');
     }
 
     /**

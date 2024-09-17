@@ -33,18 +33,58 @@ const form = useForm({
     publisher: '',
     pages: '',
     image: '',
-    release_day: '',
+    release_date: '',
     authors: [],
 })
 
-const title_form = ref(props.book === null ? 'Create book' : 'Edit Book')
+console.log(props.book)
+
+const title_form = ref(
+    Object.keys(props.book).length === 0 ? 'Create book' : 'Edit Book'
+)
 const req = ref('required')
 const srcImg = ref('../../storage/img/example.jpg')
 
 const classMsj = ref('hidden')
 const msj = ref('')
 
-const save = () => {}
+if (Object.keys(props.book).length !== 0) {
+    srcImg.value = `../../storage${props.book.image}`
+    form.release_date = props.book.release_date
+    form.description = props.book.description
+    form.publisher = props.book.publisher
+    form.title = props.book.title
+    form.pages = props.book.pages
+    form.image = props.book.image
+    form.isbn = props.book.isbn
+}
+
+const save = () => {
+    if (Object.keys(props.book).length === 0) {
+        form.post(route('books.store'), {
+            onSuccess: () => ok('Book Created'),
+        })
+    } else {
+        form.post(route('updatebook'))
+    }
+}
+
+const ok = (message) => {
+    classMsj.value = 'block'
+    msj.value = message
+
+    setTimeout(() => {
+        classMsj.value = 'hidden'
+        msj.value = ''
+    }, 5000)
+
+    form.reset()
+}
+
+const showImg = (e) => {
+    form.image = e.target.files[0]
+    srcImg.value = URL.createObjectURL(e.target.files[0])
+}
 </script>
 
 <template>
@@ -74,9 +114,42 @@ const save = () => {}
                 </NavLink>
             </div>
         </template>
+
+        <div
+            :class="classMsj"
+            class="inline-flex overflow-hidden mb-4 w-full bg-white rounded-lg shadow-md"
+        >
+            <div class="flex justify-center items-center w-12 bg-green-500">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                </svg>
+            </div>
+
+            <div class="px-4 py-2 -mx-3">
+                <div class="mx-3">
+                    <span class="font-semibold text-green-500">Success</span>
+                    <p class="text-sm text-gray-600">{{ msj }}</p>
+                </div>
+            </div>
+        </div>
+
         <div class="grid gap-6 bg-white mb-8 md:grid-cols-2 border rounded-lg">
             <div class="min-w-0 p-4 rounded-lg shadow-xs">
-                <form class="mt-6 mb-6 space-y-6 max-w-xl">
+                <form
+                    class="mt-6 mb-6 space-y-6 max-w-xl"
+                    @submit.prevent="save"
+                >
                     <InputGroup
                         :text="'ISBN'"
                         :required="req"
@@ -209,7 +282,7 @@ const save = () => {}
                         :required="req"
                         :type="'file'"
                         :accept="'image/*'"
-                        v-model="form.image"
+                        @change="showImg($event)"
                         v-if="props.book"
                     >
                         <svg
@@ -231,7 +304,7 @@ const save = () => {}
                         :text="'Image'"
                         :type="'file'"
                         :accept="'image/*'"
-                        v-model="form.image"
+                        @change="showImg($event)"
                         v-else
                     >
                         <svg
